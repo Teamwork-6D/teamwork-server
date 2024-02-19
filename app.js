@@ -2,4 +2,22 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 
-import AppError from "./utils/appError";
+// Routers
+import userRouter from "./routes/user.js";
+
+const app = express();
+
+// Middlewares
+app.use(cors());
+app.use(morgan("dev"));
+app.use(express.json());
+
+// Routes
+app.use("/api/v1/users", userRouter);
+
+// Handling all unhandled routes
+app.all("*", (req, res, next) => {
+  next(new Error(`Can't find ${req.originalUrl} on this server`, 404));
+});
+
+export default app;
