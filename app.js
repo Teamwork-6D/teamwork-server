@@ -13,7 +13,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 // Routes
-app.use("/api/v1/users", userRouter);
+app.use("/users", userRouter);
 
 // Handling all unhandled routes
 app.all("*", (req, res, next) => {
