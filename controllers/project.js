@@ -1,6 +1,6 @@
 import Project from "../models/project.js";
 
-export async function createProject(req, res, next) {
+export async function createProject(req, res) {
   try {
     const { title } = req.body;
 
@@ -14,10 +14,17 @@ export async function createProject(req, res, next) {
       project: newProject,
     });
   } catch (error) {
-    console.log(error);
     res.status(400).json({
       status: "error",
-      message: "unable to create project",
+      message: "Unable to create project",
     });
   }
 }
+
+export async function updateProject(req, res) {}
+
+export async function deleteProject(req, res) {}
+
+export async function getAllUserProjects(req, res) {}
+
+export async function getUserProject(req, res) {}
