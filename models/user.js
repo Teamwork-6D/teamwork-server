@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
-import crypto from "crypto";
 
 const userSchema = new mongoose.Schema(
   {
@@ -13,7 +12,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "User must have a last name"],
     },
-    password: {},
+    password: {
+      type: String,
+      required: [true, "User must have a password"],
+    },
 
     email: {
       type: String,
