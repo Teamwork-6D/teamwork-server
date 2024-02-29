@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
+import util from "util";
+import { debug, log } from "console";
 
 const signToken = (id) => {
   return jwt.sign({ id: id }, process.env.JWT_SECRET);
@@ -75,6 +77,7 @@ export async function login(req, res) {
 
 export async function protect(req, res, next) {
   let token;
+
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
