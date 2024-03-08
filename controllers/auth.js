@@ -113,3 +113,23 @@ export async function protect(req, res, next) {
   req.user = user;
   next();
 }
+
+export async function getUserToAdd(req, res, next) {
+  try {
+    const { userEmail } = req.body;
+    const user = await User.findOne({ email: userEmail });
+
+    if (user) {
+      req.userToAdd = user;
+      next();
+    } else {
+      throw new Error(`User with email '${userEmail}' not found`);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      status: "error",
+      message: "User to add not found",
+    });
+  }
+}
