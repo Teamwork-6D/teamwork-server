@@ -4,6 +4,7 @@ import morgan from "morgan";
 
 // Routers
 import userRouter from "./routes/user.js";
+import projectRouter from "./routes/project.js";
 
 const app = express();
 
@@ -14,10 +15,14 @@ app.use(express.json());
 
 // Routes
 app.use("/users", userRouter);
+app.use("/projects", projectRouter);
 
 // Handling all unhandled routes
 app.all("*", (req, res, next) => {
-  next(new Error(`Can't find ${req.originalUrl} on this server`, 404));
+  res.status(404).json({
+    status: "fail",
+    message: `Can't find ${req.originalUrl} on this server`,
+  });
 });
 
 export default app;
