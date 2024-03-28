@@ -7,7 +7,7 @@ const projectSchema = new mongoose.Schema(
       required: [true, "Project must have a title"],
     },
     members: { type: [mongoose.Schema.ObjectId], ref: "User" },
-    columnsOrder: [String],
+    columnsOrder: { type: [mongoose.Schema.ObjectId], ref: "Column" },
     owner: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
