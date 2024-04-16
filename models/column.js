@@ -1,19 +1,24 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const columnSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: [true, "Project must have a title"],
+      required: [true, 'Task column must have a title'],
     },
-    cardsOrder: { type: [mongoose.Schema.ObjectId], ref: "Card" },
+    tasksOrder: {
+      type: [mongoose.Schema.ObjectId],
+      ref: 'Task',
+      default: [],
+    },
     projectId: {
       type: mongoose.Schema.ObjectId,
-      ref: "Project",
+      ref: 'Project',
+      required: [true, 'Task column must belong to a project'],
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-const Column = mongoose.model("Column", columnSchema);
+const Column = mongoose.model('Column', columnSchema);
 export default Column;

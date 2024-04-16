@@ -1,19 +1,22 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const cardSchema = new mongoose.Schema(
+const activitySchema = new mongoose.Schema(
   {
-    title: {
+    type: {
       type: String,
-      required: [true, "Project must have a title"],
+      required: [true, 'Activity must have a type'],
     },
-    cardsOrder: { type: [mongoose.Schema.ObjectId], ref: "Card" },
     projectId: {
       type: mongoose.Schema.ObjectId,
-      ref: "Project",
+      ref: 'Project',
+      required: [true, 'Activity must belong to a project'],
     },
+    task: { type: mongoose.Schema.ObjectId, ref: 'Task' },
+    fromColumn: { type: mongoose.Schema.ObjectId, ref: 'Column' },
+    toColumn: { type: mongoose.Schema.ObjectId, ref: 'Column' },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-const Column = mongoose.model("Column", cardSchema);
-export default Column;
+const Activity = mongoose.model('Activity', activitySchema);
+export default Activity;

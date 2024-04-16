@@ -1,41 +1,41 @@
-import mongoose from "mongoose";
-import validator from "validator";
-import bcrypt from "bcryptjs";
+import mongoose from 'mongoose';
+import validator from 'validator';
+import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema(
   {
     firstName: {
       type: String,
-      required: [true, "User must have a first name"],
+      required: [true, 'User must have a first name'],
     },
     lastName: {
       type: String,
-      required: [true, "User must have a last name"],
+      required: [true, 'User must have a last name'],
     },
     password: {
       type: String,
-      required: [true, "User must have a password"],
+      required: [true, 'User must have a password'],
     },
     email: {
       type: String,
-      required: [true, "Please provide your email"],
+      required: [true, 'Please provide your email'],
       unique: true,
       lowercase: true,
-      validate: [validator.isEmail, "User must provide an email"],
+      validate: [validator.isEmail, 'User must provide an email'],
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
 
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
 
-userSchema.pre("save", function (next) {
-  if (!this.isModified("password") || this.isNew) return next();
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
 
   this.passwordChangedAt = Date.now() - 1000;
 
@@ -44,11 +44,11 @@ userSchema.pre("save", function (next) {
 
 userSchema.methods.correctPassword = async function (
   candidatePassword,
-  userPassword
+  userPassword,
 ) {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
 
 export default User;
