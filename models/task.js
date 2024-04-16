@@ -23,5 +23,5 @@ const taskSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-const Column = mongoose.model('Column', taskSchema);
-export default Column;
+const Task = mongoose.model('Task', taskSchema);
+export default Task;
