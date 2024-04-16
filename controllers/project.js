@@ -1,4 +1,4 @@
-import Project from "../models/project.js";
+import Project from '../models/project.js';
 
 export async function createProject(req, res) {
   try {
@@ -10,13 +10,13 @@ export async function createProject(req, res) {
     });
 
     res.status(201).json({
-      status: "success",
+      status: 'success',
       project: newProject,
     });
   } catch (error) {
     res.status(400).json({
-      status: "error",
-      message: "Unable to create project",
+      status: 'error',
+      message: 'Unable to create project',
     });
   }
 }
@@ -31,13 +31,13 @@ export async function updateProject(req, res) {
     });
 
     res.status(201).json({
-      status: "success",
+      status: 'success',
       project,
     });
   } catch (error) {
     res.status(400).json({
-      status: "error",
-      message: "Unable to update project data",
+      status: 'error',
+      message: 'Unable to update project data',
     });
   }
 }
@@ -49,14 +49,14 @@ export async function deleteProject(req, res) {
     const project = await Project.findByIdAndDelete(id);
 
     res.status(200).json({
-      status: "success",
-      message: "Project deleted successfully",
+      status: 'success',
+      message: 'Project deleted successfully',
       project,
     });
   } catch (error) {
     res.status(400).json({
-      status: "error",
-      message: "Unable to delete project data",
+      status: 'error',
+      message: 'Unable to delete project data',
     });
   }
 }
@@ -67,14 +67,14 @@ export async function getAllUserProjects(req, res) {
       $or: [{ owner: req.user._id }, { members: { $in: [req.user._id] } }],
     });
     res.status(200).json({
-      status: "success",
+      status: 'success',
       length: projects.length,
       projects,
     });
   } catch (error) {
     res.status(400).json({
-      status: "error",
-      message: "No projects found",
+      status: 'error',
+      message: 'No projects found',
     });
   }
 }
@@ -86,13 +86,13 @@ export async function getUserProject(req, res) {
     const project = await Project.findById(id);
 
     res.status(200).json({
-      status: "success",
+      status: 'success',
       project,
     });
   } catch (error) {
     res.status(400).json({
-      status: "error",
-      message: "No project found",
+      status: 'error',
+      message: 'No project found',
     });
   }
 }
@@ -108,17 +108,17 @@ export async function addMember(req, res) {
       {
         new: true,
         runValidators: true,
-      }
+      },
     );
 
     res.status(201).json({
-      status: "success",
+      status: 'success',
       project,
     });
   } catch (error) {
     res.status(400).json({
-      status: "error",
-      message: "Could not add user to project",
+      status: 'error',
+      message: 'Could not add user to project',
     });
   }
 }
@@ -132,17 +132,17 @@ export async function removeMember(req, res) {
       {
         new: true,
         runValidators: true,
-      }
+      },
     );
 
     res.status(201).json({
-      status: "success",
+      status: 'success',
       project,
     });
   } catch (error) {
     res.status(400).json({
-      status: "error",
-      message: "Could not remove member from project",
+      status: 'error',
+      message: 'Could not remove member from project',
     });
   }
 }

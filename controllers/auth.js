@@ -1,14 +1,13 @@
-import jwt from "jsonwebtoken";
-import User from "../models/user.js";
-import util from "util";
-import { debug, log } from "console";
+import jwt from 'jsonwebtoken';
+import User from '../models/user.js';
+import util from 'util';
 
 const signToken = (id) => {
-  return jwt.sign({ id: id }, process.env.JWT_SECRET);
+  return jwt.sign({ id }, process.env.JWT_SECRET);
 };
 
 // Handle register
-export async function register(req, res, next) {
+export async function register(req, res) {
   try {
     const { firstName, lastName, email, password } = req.body;
 
@@ -21,14 +20,14 @@ export async function register(req, res, next) {
     };
 
     res.status(201).json({
-      status: "success",
-      user: user,
+      status: 'success',
+      user,
     });
   } catch (error) {
     res.status(400).json({
-      status: "error",
-      message: "Error creating user account.",
-      stack: process.env.ENV === "development" && error,
+      status: 'error',
+      message: 'Error creating user account.',
+      stack: process.env.ENV === 'development' && error,
     });
   }
 }
@@ -41,17 +40,17 @@ export async function login(req, res) {
     // 1) Check if email and password exist
     if (!email || !password) {
       return res.status(400).json({
-        status: "fail",
-        message: "Please provide email and password",
+        status: 'fail',
+        message: 'Please provide email and password',
       });
     }
     // 2) Check if user exists && password is correct
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ email }).select('+password');
 
     if (!user || !(await user.correctPassword(password, user.password))) {
       return res.status(401).json({
-        status: "fail",
-        message: "Incorrect email or password.",
+        status: 'fail',
+        message: 'Incorrect email or password.',
       });
     }
 
@@ -63,14 +62,14 @@ export async function login(req, res) {
     };
 
     res.status(201).json({
-      status: "success",
+      status: 'success',
       user: _user,
     });
   } catch (error) {
     res.status(400).json({
-      status: "error",
-      message: "Error logging into user account.",
-      stack: process.env.ENV === "development" && error,
+      status: 'error',
+      message: 'Error logging into user account.',
+      stack: process.env.ENV === 'development' && error,
     });
   }
 }
@@ -80,23 +79,23 @@ export async function protect(req, res, next) {
 
   if (
     req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
+    req.headers.authorization.startsWith('Bearer')
   ) {
-    token = req.headers.authorization.split(" ")[1];
+    token = req.headers.authorization.split(' ')[1];
   }
 
   // 1) Check if there's no token
   if (!token) {
     return res.status(401).json({
-      status: "fail",
-      message: "You are not signed in! Please sign in to get access.",
+      status: 'fail',
+      message: 'You are not signed in! Please sign in to get access.',
     });
   }
 
   // 2) Validate token
   const decodedPayLoad = await util.promisify(jwt.verify)(
     token,
-    process.env.JWT_SECRET
+    process.env.JWT_SECRET,
   );
 
   // 3) Check if user still exists
@@ -104,8 +103,8 @@ export async function protect(req, res, next) {
 
   if (!user) {
     return res.status(401).json({
-      status: "fail",
-      message: "The user no longer exists.",
+      status: 'fail',
+      message: 'The user no longer exists.',
     });
   }
 
@@ -128,8 +127,8 @@ export async function getUserToAdd(req, res, next) {
   } catch (error) {
     console.log(error);
     res.status(400).json({
-      status: "error",
-      message: "User to add not found",
+      status: 'error',
+      message: 'User to add not found',
     });
   }
 }

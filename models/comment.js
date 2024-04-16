@@ -16,6 +16,11 @@ const commentSchema = new mongoose.Schema(
       ref: 'Project',
       required: [true, 'comment must belong to a project'],
     },
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+      required: [true, 'A comment must belong to a user'],
+    },
   },
   { timestamps: true },
 );
