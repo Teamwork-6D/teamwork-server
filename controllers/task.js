@@ -24,8 +24,21 @@ export async function deleteTask(taskData) {
   return task;
 }
 
-export async function getAllProjectTasks(projectId) {
-  const tasks = await Task.find({ projectId });
+// req res cycle
+export async function getAllProjectTasks(req, res) {
+  try {
+    const { projectId } = req.body;
 
-  return tasks;
+    const tasks = await Task.find({ projectId });
+
+    res.status(200).json({
+      status: 'success',
+      tasks,
+    });
+  } catch (error) {
+    resizeBy.status(400).json({
+      status: 'failure',
+      message: 'Unable to fetch project tasks',
+    });
+  }
 }

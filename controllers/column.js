@@ -33,8 +33,19 @@ export async function changeColumnsOrder(columnData) {
   return project;
 }
 
-export async function getAllProjectColumns(projectId) {
-  const columns = await Column.find({ projectId });
+export async function getAllProjectColumns(req, res) {
+  try {
+    const { projectId } = req.body;
+    const columns = await Column.find({ projectId });
 
-  return columns;
+    res.status(200).json({
+      status: 'success',
+      columns,
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: 'failure',
+      message: 'Unable to fetch activities',
+    });
+  }
 }

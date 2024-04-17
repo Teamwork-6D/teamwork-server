@@ -1,21 +1,41 @@
 import Comment from '../models/comment';
 
-export async function createCommnents(commentData) {
-  const { body, taskId, projectId, user } = commentData;
+export async function createCommnents(req, res) {
+  try {
+    const { body, taskId, projectId, user } = req.body;
 
-  const newComment = await Comment.create({ body, taskId, projectId, user });
+    const newComment = await Comment.create({ body, taskId, projectId, user });
 
-  return newComment;
+    res.status(200).json({
+      status: 'success',
+      comment: newComment,
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: 'failure',
+      message: 'Unable to create comments',
+    });
+  }
 }
 
-export async function deleteCommnents(commentData) {
-  const { _id } = commentData;
+export async function deleteCommnents(req, res) {
+  try {
+    const { id } = req.params;
 
-  const comment = await Comment.findByIdAndDelete(_id);
+    const comment = await Comment.findByIdAndDelete(id);
 
-  return comment;
+    res.status(200).json({
+      status: 'success',
+      comment,
+    });
+
+    return comment;
+  } catch (error) {
+
+  }
 }
 
+// req res cycle
 export async function getAllTaskComments(req, res) {
   try {
     const { taskId } = req.body;

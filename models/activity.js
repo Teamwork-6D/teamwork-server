@@ -2,10 +2,6 @@ import mongoose from 'mongoose';
 
 const activitySchema = new mongoose.Schema(
   {
-    type: {
-      type: String,
-      required: [true, 'Activity must have a type'],
-    },
     projectId: {
       type: mongoose.Schema.ObjectId,
       ref: 'Project',
