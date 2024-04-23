@@ -1,4 +1,4 @@
-import Activity from '../models/activity';
+import Activity from '../models/activity.js';
 
 export async function createActivity(activityData) {
   const { projectId, message, task, fromColumn, toColumn, user } = activityData;

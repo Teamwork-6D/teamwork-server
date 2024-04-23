@@ -1,6 +1,6 @@
-import Comment from '../models/comment';
+import Comment from '../models/comment.js';
 
-export async function createCommnents(req, res) {
+export async function createCommnent(req, res) {
   try {
     const { body, taskId, projectId, user } = req.body;
 
@@ -18,7 +18,7 @@ export async function createCommnents(req, res) {
   }
 }
 
-export async function deleteCommnents(req, res) {
+export async function deleteCommnent(req, res) {
   try {
     const { id } = req.params;
 

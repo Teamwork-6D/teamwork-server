@@ -7,6 +7,7 @@ import userRouter from './routes/user.js';
 import projectRouter from './routes/project.js';
 import columnRouter from './routes/column.js';
 import taskRouter from './routes/task.js';
+import commentRouter from './routes/comment.js';
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use('/users', userRouter);
 app.use('/projects', projectRouter);
 app.use('/columns', columnRouter);
 app.use('/tasks', taskRouter);
+app.use('/comments', commentRouter);
 
 // Handling all unhandled routes
 app.all('*', (req, res) => {
