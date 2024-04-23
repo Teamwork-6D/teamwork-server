@@ -1,5 +1,5 @@
-import Column from '../models/column';
-import Project from '../models/project';
+import Column from '../models/column.js';
+import Project from '../models/project.js';
 
 export async function createColumn(columnData) {
   const { title, tasksOrder, projectId } = columnData;

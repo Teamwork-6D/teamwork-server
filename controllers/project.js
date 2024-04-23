@@ -28,7 +28,7 @@ export async function updateProject(req, res) {
 
     const project = await Project.findByIdAndUpdate(id, {
       title,
-    });
+    }, { new: true, runValidators: true });
 
     res.status(201).json({
       status: 'success',

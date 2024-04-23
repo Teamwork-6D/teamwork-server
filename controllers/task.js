@@ -36,7 +36,7 @@ export async function getAllProjectTasks(req, res) {
       tasks,
     });
   } catch (error) {
-    resizeBy.status(400).json({
+    res.status(400).json({
       status: 'failure',
       message: 'Unable to fetch project tasks',
     });
