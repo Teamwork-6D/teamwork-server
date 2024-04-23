@@ -8,6 +8,7 @@ import projectRouter from './routes/project.js';
 import columnRouter from './routes/column.js';
 import taskRouter from './routes/task.js';
 import commentRouter from './routes/comment.js';
+import activityRouter from './routes/activity.js';
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use('/projects', projectRouter);
 app.use('/columns', columnRouter);
 app.use('/tasks', taskRouter);
 app.use('/comments', commentRouter);
+app.use('/activities', activityRouter);
 
 // Handling all unhandled routes
 app.all('*', (req, res) => {
