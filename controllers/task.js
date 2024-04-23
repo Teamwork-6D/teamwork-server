@@ -1,4 +1,4 @@
-import Task from '../models/task';
+import Task from '../models/task.js';
 
 export async function createTask(taskData) {
   const { title, body, projectId, columnId } = taskData;

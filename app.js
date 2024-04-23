@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import userRouter from './routes/user.js';
 import projectRouter from './routes/project.js';
 import columnRouter from './routes/column.js';
+import taskRouter from './routes/task.js';
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use('/users', userRouter);
 app.use('/projects', projectRouter);
 app.use('/columns', columnRouter);
+app.use('/tasks', taskRouter);
 
 // Handling all unhandled routes
 app.all('*', (req, res) => {
