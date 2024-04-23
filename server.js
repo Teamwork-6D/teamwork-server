@@ -23,3 +23,15 @@ const io = new Server(server, {
 server.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });
+
+io.on('connection', socket => {
+  console.log('User connected to socket');
+
+  socket.on('join-board', () => {
+    console.log('User joined board');
+
+    socket.on('disconnect', () => {
+      console.log('user disconnected');
+    });
+  });
+});
