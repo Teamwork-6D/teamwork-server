@@ -1,53 +1,53 @@
+// column.test.js
+
 import mongoose from 'mongoose';
-import Column from './column';
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import Column from './column'; // Adjust the import path if necessary
 
-// Mocking mongoose functions
-jest.mock('mongoose');
+let mongoServer;
 
-describe('Column Model', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
+beforeAll(async () => {
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
+  await mongoose.connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
   });
+});
 
-  it('should create a new column with valid fields', async () => {
-    // Mock data
-    const mockColumnData = {
-      title: 'Sample column title',
-      tasksOrder: [mongoose.Types.ObjectId(), mongoose.Types.ObjectId()],
-      projectId: mongoose.Types.ObjectId(),
-    };
+afterAll(async () => {
+  await mongoose.disconnect();
+  await mongoServer.stop();
+});
 
-    // Mock save function of Column model
-    const saveMock = jest.fn().mockResolvedValue(mockColumnData);
+afterEach(async () => {
+  await Column.deleteMany();
+});
 
-    // Creating a new column with the mocked save function
-    const newColumn = new Column({
-      ...mockColumnData,
-      save: saveMock,
+describe('Column Model Test', () => {
+  it('should create & save a column successfully', async () => {
+    const validColumn = new Column({
+      title: 'To Do',
+      tasksOrder: [],
+      projectId: new mongoose.Types.ObjectId(),
     });
-
-    // Assertions
-    expect(newColumn.title).toEqual(mockColumnData.title);
-    expect(newColumn.tasksOrder).toEqual(mockColumnData.tasksOrder);
-    expect(newColumn.projectId).toEqual(mockColumnData.projectId);
-
-    // Ensure save function was called with the correct data
-    expect(saveMock).toHaveBeenCalled();
+    const savedColumn = await validColumn.save();
+    expect(savedColumn._id).toBeDefined();
+    expect(savedColumn.title).toBe(validColumn.title);
+    expect(savedColumn.tasksOrder).toEqual(expect.arrayContaining([]));
+    expect(savedColumn.projectId).toBe(validColumn.projectId);
   });
 
-  it('should throw error when required fields are missing', async () => {
-    // Mock data with missing required fields
-    const mockColumnData = {
-      tasksOrder: [mongoose.Types.ObjectId(), mongoose.Types.ObjectId()],
-    };
-
+  it('should fail to create column without required fields', async () => {
+    const columnWithoutRequiredFields = new Column({});
+    let err;
     try {
-      // Creating a new column with missing required fields
-      new Column(mockColumnData);
+      await columnWithoutRequiredFields.save();
     } catch (error) {
-      // Assert that error is thrown and contains the correct message
-      expect(error.message).toContain('Task column must have a title');
-      expect(error.message).toContain('Task column must belong to a project');
+      err = error;
     }
+    expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
+    expect(err.errors.title).toBeDefined();
+    expect(err.errors.projectId).toBeDefined();
   });
 });

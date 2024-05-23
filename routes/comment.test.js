@@ -1,13 +1,13 @@
 import request from 'supertest';
 import express from 'express';
 import commentRouter from '../routes/comment'; // Adjust the path as necessary
-import { createCommnent, deleteCommnent, getAllTaskComments } from '../controllers/comment';
+import { createComment, deleteComment, getAllTaskComments } from '../controllers/comment';
 import { protect } from '../controllers/auth';
 
 // Mock the controller functions
 jest.mock('../controllers/comment', () => ({
-  createCommnent: jest.fn((req, res) => res.status(201).json({ message: 'Comment created' })),
-  deleteCommnent: jest.fn((req, res) => res.status(204).send()),
+  createComment: jest.fn((req, res) => res.status(201).json({ message: 'Comment created' })),
+  deleteComment: jest.fn((req, res) => res.status(204).send()),
   getAllTaskComments: jest.fn((req, res) => res.status(200).json({ comments: [] })),
 }));
 
@@ -35,7 +35,7 @@ describe('Comment Router', () => {
       expect(response.status).toBe(201);
       expect(response.body).toEqual({ message: 'Comment created' });
       expect(protect).toHaveBeenCalledTimes(1);
-      expect(createCommnent).toHaveBeenCalledTimes(1);
+      expect(createComment).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -60,7 +60,7 @@ describe('Comment Router', () => {
 
       expect(response.status).toBe(204);
       expect(protect).toHaveBeenCalledTimes(1);
-      expect(deleteCommnent).toHaveBeenCalledTimes(1);
+      expect(deleteComment).toHaveBeenCalledTimes(1);
     });
   });
 });

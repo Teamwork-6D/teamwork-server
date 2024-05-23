@@ -1,5 +1,5 @@
 import express from 'express';
-import { createCommnent, deleteCommnent, getAllTaskComments } from '../controllers/comment.js';
+import { createComment, deleteComment, getAllTaskComments } from '../controllers/comment.js';
 import { protect } from '../controllers/auth.js';
 
 const commentRouter = express.Router();
@@ -7,11 +7,11 @@ const commentRouter = express.Router();
 
 commentRouter
   .route('/')
-  .post(protect, createCommnent)
+  .post(protect, createComment)
   .get(protect, getAllTaskComments);
 
 commentRouter
   .route('/:id')
-  .delete(protect, deleteCommnent);
+  .delete(protect, deleteComment);
 
 export default commentRouter;
