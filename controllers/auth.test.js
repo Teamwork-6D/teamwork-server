@@ -60,4 +60,106 @@ describe('Auth Functions', () => {
     });
   });
   
+//   
+  describe('protect', () => {
+    it('should handle missing token', async () => {
+      const req = { headers: {} };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+      const next = jest.fn();
+
+      await auth.protect(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(401);
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        status: 'fail',
+        message: 'You are not signed in! Please sign in to get access.'
+      }));
+    });
+
+    it('should handle invalid token', async () => {
+      jwt.verify.mockImplementationOnce((token, secret, callback) => callback(new Error('Invalid token'), null));
+
+      const req = { headers: { authorization: 'Bearer invalidtoken' } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+      const next = jest.fn();
+
+      await auth.protect(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(401);
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        status: 'fail',
+        message: 'You are not signed in! Please sign in to get access.'
+      }));
+    });
+
+    it('should handle valid token but non-existent user', async () => {
+      const req = { headers: { authorization: 'Bearer validtoken' } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+      const next = jest.fn();
+
+      User.findById.mockResolvedValue(null);
+
+      await auth.protect(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(401);
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        status: 'fail',
+        message: 'The user no longer exists.'
+      }));
+    });
+
+    it('should allow access with valid token and existing user', async () => {
+      const req = { headers: { authorization: 'Bearer validtoken' } };
+      const res = {};
+      const next = jest.fn();
+
+      User.findById.mockResolvedValue({
+        _id: 'testUserId'
+      });
+
+      await auth.protect(req, res, next);
+
+      expect(next).toHaveBeenCalled();
+      expect(req.user).toEqual(expect.objectContaining({
+        _id: 'testUserId'
+      }));
+    });
+  });
+
+  describe('getUserToAdd', () => {
+    it('should handle user not found', async () => {
+      const req = { body: { userEmail: 'notfound@example.com' } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+      const next = jest.fn();
+
+      User.findOne.mockResolvedValue(null);
+
+      await auth.getUserToAdd(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        status: 'error',
+        message: 'User to add not found'
+      }));
+    });
+
+    it('should add user to req when found', async () => {
+      const req = { body: { userEmail: 'found@example.com' } };
+      const res = {};
+      const next = jest.fn();
+
+      User.findOne.mockResolvedValue({
+        _id: 'foundUserId',
+        email: 'found@example.com'
+      });
+
+      await auth.getUserToAdd(req, res, next);
+
+      expect(next).toHaveBeenCalled();
+      expect(req.userToAdd).toEqual(expect.objectContaining({
+        _id: 'foundUserId',
+        email: 'found@example.com'
+      }));
+    });
+  });
 });
