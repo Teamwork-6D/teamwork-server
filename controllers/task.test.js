@@ -1,7 +1,5 @@
-// task.test.js
-
 import mongoose from 'mongoose';
-import * as taskService from './task'; // Adjust the import path if necessary
+import * as taskService from './task';
 import Task from '../models/task';
 import Column from '../models/column';
 import { createActivity } from './activity';
@@ -45,8 +43,7 @@ describe('Task Service Test', () => {
       columnId: taskData.columnId,
     });
     expect(result).toEqual(createdTask);
-  }, 15000); // Increase the timeout to 15 seconds
-
+  }, 15000); 
   it('should update a task successfully', async () => {
     const taskData = {
       _id: new mongoose.Types.ObjectId(),
@@ -67,7 +64,7 @@ describe('Task Service Test', () => {
       dueDate: taskData.dueDate,
     });
     expect(result).toEqual(taskData);
-  }, 15000); // Increase the timeout to 15 seconds
+  }, 15000); 
 
   it('should delete a task successfully', async () => {
     const taskData = {
@@ -76,7 +73,7 @@ describe('Task Service Test', () => {
 
     const deletedTask = { _id: taskData._id, columnId: new mongoose.Types.ObjectId() };
     Task.findByIdAndDelete.mockResolvedValue(deletedTask);
-    Column.findByIdAndUpdate.mockResolvedValue({}); // Mocking the Column update
+    Column.findByIdAndUpdate.mockResolvedValue({}); 
 
     const result = await taskService.deleteTask(taskData);
 
@@ -85,7 +82,7 @@ describe('Task Service Test', () => {
       $pull: { tasksOrder: taskData._id },
     });
     expect(result).toEqual(deletedTask);
-  }, 15000); // Increase the timeout to 15 seconds
+  }, 15000); 
 
   it('should get all project tasks successfully', async () => {
     const req = {
@@ -110,7 +107,7 @@ describe('Task Service Test', () => {
       status: 'success',
       tasks,
     });
-  }, 15000); // Increase the timeout to 15 seconds
+  }, 15000); 
 
   it('should handle errors in getAllProjectTasks', async () => {
     const req = {
@@ -131,5 +128,5 @@ describe('Task Service Test', () => {
       status: 'failure',
       message: 'Unable to fetch project tasks',
     });
-  }, 15000); // Increase the timeout to 15 seconds
+  }, 15000); 
 });

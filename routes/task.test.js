@@ -1,10 +1,9 @@
 import request from 'supertest';
 import express from 'express';
-import taskRouter from '../routes/task'; // Adjust the path as necessary
+import taskRouter from '../routes/task'; 
 import { getAllProjectTasks, addUserToTask, removeUserFromTask } from '../controllers/task';
 import { protect } from '../controllers/auth';
 
-// Mock the controller functions
 jest.mock('../controllers/task', () => ({
   getAllProjectTasks: jest.fn((req, res) => {
     res.status(200).json({ message: 'All project tasks' });
@@ -17,7 +16,6 @@ jest.mock('../controllers/task', () => ({
   }),
 }));
 
-// Mock the middleware function
 jest.mock('../controllers/auth', () => ({
   protect: jest.fn((req, res, next) => {
     next();
@@ -37,7 +35,7 @@ describe('Task Router', () => {
     it('should get all project tasks', async () => {
       const response = await request(app)
         .get('/tasks')
-        .set('Authorization', 'Bearer token'); // Assuming you have some kind of token-based auth
+        .set('Authorization', 'Bearer token'); 
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({ message: 'All project tasks' });
@@ -48,7 +46,7 @@ describe('Task Router', () => {
     it('should call protect middleware before getting tasks', async () => {
       await request(app)
         .get('/tasks')
-        .set('Authorization', 'Bearer token'); // Assuming you have some kind of token-based auth
+        .set('Authorization', 'Bearer token'); 
 
       expect(protect).toHaveBeenCalledTimes(1);
       expect(getAllProjectTasks).toHaveBeenCalledTimes(1);
@@ -59,7 +57,7 @@ describe('Task Router', () => {
     it('should add user to task', async () => {
       const response = await request(app)
         .patch('/tasks/add-user')
-        .set('Authorization', 'Bearer token') // Assuming you have some kind of token-based auth
+        .set('Authorization', 'Bearer token') 
         .send({ userId: 'user123', taskId: 'task123' });
 
       expect(response.status).toBe(200);
@@ -73,7 +71,7 @@ describe('Task Router', () => {
     it('should remove user from task', async () => {
       const response = await request(app)
         .patch('/tasks/remove-user')
-        .set('Authorization', 'Bearer token') // Assuming you have some kind of token-based auth
+        .set('Authorization', 'Bearer token') 
         .send({ userId: 'user123', taskId: 'task123' });
 
       expect(response.status).toBe(200);

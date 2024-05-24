@@ -1,5 +1,3 @@
-// activity.test.js
-
 import Activity from '../models/activity.js';
 import { createActivity, updateActivity, deleteActivity, getAllProjectActivities } from './activity.js';
 

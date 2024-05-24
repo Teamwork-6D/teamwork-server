@@ -1,15 +1,13 @@
 import request from 'supertest';
 import express from 'express';
-import columnRouter from '../routes/column'; // Adjust the path as necessary
+import columnRouter from '../routes/column'; 
 import { getAllProjectColumns } from '../controllers/column';
 import { protect } from '../controllers/auth';
 
-// Mock the controller functions
 jest.mock('../controllers/column', () => ({
   getAllProjectColumns: jest.fn((req, res) => res.status(200).json({ columns: [] })),
 }));
 
-// Mock the middleware function
 jest.mock('../controllers/auth', () => ({
   protect: jest.fn((req, res, next) => next()),
 }));

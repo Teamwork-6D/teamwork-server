@@ -1,6 +1,6 @@
 import request from 'supertest';
 import express from 'express';
-import projectRouter from '../routes/project'; // Adjust the path as necessary
+import projectRouter from '../routes/project'; 
 import {
   createProject,
   getAllUserProjects,
@@ -12,7 +12,6 @@ import {
 } from '../controllers/project';
 import { protect, getUserToAdd } from '../controllers/auth';
 
-// Mock the controller functions
 jest.mock('../controllers/project', () => ({
   createProject: jest.fn((req, res) => res.status(201).json({ message: 'Project created' })),
   getAllUserProjects: jest.fn((req, res) => res.status(200).json({ message: 'All user projects' })),
@@ -23,7 +22,6 @@ jest.mock('../controllers/project', () => ({
   removeMember: jest.fn((req, res) => res.status(200).json({ message: 'Member removed' })),
 }));
 
-// Mock the middleware functions
 jest.mock('../controllers/auth', () => ({
   protect: jest.fn((req, res, next) => next()),
   getUserToAdd: jest.fn((req, res, next) => next()),

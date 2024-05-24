@@ -1,8 +1,6 @@
-// column.test.js
-
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import Column from './column'; // Adjust the import path if necessary
+import Column from './column'; 
 
 let mongoServer;
 

@@ -1,7 +1,5 @@
-// comment.test.js
-
 import mongoose from 'mongoose';
-import * as commentService from './comment'; // Adjust the import path if necessary
+import * as commentService from './comment'; 
 import Comment from '../models/comment';
 
 jest.mock('../models/comment');

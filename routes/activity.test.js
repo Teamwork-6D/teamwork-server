@@ -1,15 +1,13 @@
 import request from 'supertest';
 import express from 'express';
-import activityRouter from '../routes/activity'; // Adjust the path as necessary
+import activityRouter from '../routes/activity'; 
 import { getAllProjectActivities } from '../controllers/activity';
 import { protect } from '../controllers/auth';
 
-// Mock the controller functions
 jest.mock('../controllers/activity', () => ({
   getAllProjectActivities: jest.fn((req, res) => res.status(200).json({ activities: [] })),
 }));
 
-// Mock the middleware function
 jest.mock('../controllers/auth', () => ({
   protect: jest.fn((req, res, next) => next()),
 }));

@@ -1,5 +1,3 @@
-// column.test.js
-
 import Column from '../models/column.js';
 import Project from '../models/project.js';
 import Task from '../models/task.js';

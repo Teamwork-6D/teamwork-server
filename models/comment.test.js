@@ -1,8 +1,6 @@
-// comment.test.js
-
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import Comment from './comment'; // Adjust the import path if necessary
+import Comment from './comment'; 
 
 let mongoServer;
 

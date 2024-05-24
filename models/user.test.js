@@ -1,9 +1,7 @@
-// user.test.js
-
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import bcrypt from 'bcryptjs';
-import User from './user'; // Adjust the import path if necessary
+import User from './user'; 
 
 let mongoServer;
 
@@ -39,7 +37,6 @@ describe('User Model Test', () => {
     expect(savedUser.lastName).toBe(validUser.lastName);
     expect(savedUser.email).toBe(validUser.email);
 
-    // Check that the password is hashed
     const isPasswordHashed = await bcrypt.compare('password123', savedUser.password);
     expect(isPasswordHashed).toBe(true);
   });
@@ -81,7 +78,7 @@ describe('User Model Test', () => {
       err = error;
     }
     expect(err).toBeInstanceOf(mongoose.mongo.MongoServerError);
-    expect(err.code).toBe(11000); // Duplicate key error code
+    expect(err.code).toBe(11000); 
   });
 
   it('should hash the password before saving', async () => {

@@ -1,5 +1,3 @@
-// auth.test.js
-
 import jwt from 'jsonwebtoken';
 import User from '../models/user.js';
 import { register, login, protect, getUserToAdd } from './auth.js';

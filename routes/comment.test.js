@@ -1,17 +1,15 @@
 import request from 'supertest';
 import express from 'express';
-import commentRouter from '../routes/comment'; // Adjust the path as necessary
+import commentRouter from '../routes/comment'; 
 import { createComment, deleteComment, getAllTaskComments } from '../controllers/comment';
 import { protect } from '../controllers/auth';
 
-// Mock the controller functions
 jest.mock('../controllers/comment', () => ({
   createComment: jest.fn((req, res) => res.status(201).json({ message: 'Comment created' })),
   deleteComment: jest.fn((req, res) => res.status(204).send()),
   getAllTaskComments: jest.fn((req, res) => res.status(200).json({ comments: [] })),
 }));
 
-// Mock the middleware function
 jest.mock('../controllers/auth', () => ({
   protect: jest.fn((req, res, next) => next()),
 }));

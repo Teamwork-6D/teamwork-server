@@ -3,7 +3,6 @@ import express from 'express';
 import userRouter from '../routes/user';
 import { register, login } from '../controllers/auth';
 
-// Mock the controller functions
 jest.mock('../controllers/auth', () => ({
   register: jest.fn((req, res) => {
     res.status(201).send('User registered');
@@ -14,8 +13,8 @@ jest.mock('../controllers/auth', () => ({
 }));
 
 const app = express();
-app.use(express.json()); // For parsing application/json
-app.use('/users', userRouter); // Mount the router
+app.use(express.json()); 
+app.use('/users', userRouter); 
 
 describe('User Router', () => {
   describe('POST /users/register', () => {

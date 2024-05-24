@@ -1,8 +1,6 @@
-// project.test.js
-
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import Project from './project'; // Adjust the import path if necessary
+import Project from './project'; 
 
 let mongoServer;
 
