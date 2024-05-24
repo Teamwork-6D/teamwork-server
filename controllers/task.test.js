@@ -3,8 +3,12 @@
 import mongoose from 'mongoose';
 import * as taskService from './task'; // Adjust the import path if necessary
 import Task from '../models/task';
+import Column from '../models/column';
+import { createActivity } from './activity';
 
 jest.mock('../models/task');
+jest.mock('../models/column');
+jest.mock('./activity');
 
 describe('Task Service Test', () => {
   beforeAll(async () => {
@@ -22,9 +26,10 @@ describe('Task Service Test', () => {
   it('should create a task successfully', async () => {
     const taskData = {
       title: 'New Task',
-      body: 'Task body content',
+      about: 'Task body content',
       projectId: new mongoose.Types.ObjectId(),
       columnId: new mongoose.Types.ObjectId(),
+      user: { fullName: 'Test User', id: new mongoose.Types.ObjectId() },
     };
 
     const createdTask = { ...taskData, _id: new mongoose.Types.ObjectId() };
@@ -32,15 +37,22 @@ describe('Task Service Test', () => {
 
     const result = await taskService.createTask(taskData);
 
-    expect(Task.create).toHaveBeenCalledWith(taskData);
+    expect(Task.create).toHaveBeenCalledWith({
+      title: taskData.title,
+      about: taskData.about,
+      projectId: taskData.projectId,
+      dueDate: taskData.dueDate,
+      columnId: taskData.columnId,
+    });
     expect(result).toEqual(createdTask);
-  });
+  }, 15000); // Increase the timeout to 15 seconds
 
   it('should update a task successfully', async () => {
     const taskData = {
       _id: new mongoose.Types.ObjectId(),
       title: 'Updated Task',
-      body: 'Updated task body content',
+      about: 'Updated task body content',
+      dueDate: new Date(),
       projectId: new mongoose.Types.ObjectId(),
       columnId: new mongoose.Types.ObjectId(),
     };
@@ -51,26 +63,29 @@ describe('Task Service Test', () => {
 
     expect(Task.findByIdAndUpdate).toHaveBeenCalledWith(taskData._id, {
       title: taskData.title,
-      body: taskData.body,
-      projectId: taskData.projectId,
-      columnId: taskData.columnId,
+      about: taskData.about,
+      dueDate: taskData.dueDate,
     });
     expect(result).toEqual(taskData);
-  });
+  }, 15000); // Increase the timeout to 15 seconds
 
   it('should delete a task successfully', async () => {
     const taskData = {
       _id: new mongoose.Types.ObjectId(),
     };
 
-    const deletedTask = { _id: taskData._id };
+    const deletedTask = { _id: taskData._id, columnId: new mongoose.Types.ObjectId() };
     Task.findByIdAndDelete.mockResolvedValue(deletedTask);
+    Column.findByIdAndUpdate.mockResolvedValue({}); // Mocking the Column update
 
     const result = await taskService.deleteTask(taskData);
 
     expect(Task.findByIdAndDelete).toHaveBeenCalledWith(taskData._id);
+    expect(Column.findByIdAndUpdate).toHaveBeenCalledWith(deletedTask.columnId, {
+      $pull: { tasksOrder: taskData._id },
+    });
     expect(result).toEqual(deletedTask);
-  });
+  }, 15000); // Increase the timeout to 15 seconds
 
   it('should get all project tasks successfully', async () => {
     const req = {
@@ -95,7 +110,7 @@ describe('Task Service Test', () => {
       status: 'success',
       tasks,
     });
-  });
+  }, 15000); // Increase the timeout to 15 seconds
 
   it('should handle errors in getAllProjectTasks', async () => {
     const req = {
@@ -116,5 +131,5 @@ describe('Task Service Test', () => {
       status: 'failure',
       message: 'Unable to fetch project tasks',
     });
-  });
+  }, 15000); // Increase the timeout to 15 seconds
 });

@@ -1,13 +1,19 @@
 import request from 'supertest';
 import express from 'express';
 import taskRouter from '../routes/task'; // Adjust the path as necessary
-import { getAllProjectTasks } from '../controllers/task';
+import { getAllProjectTasks, addUserToTask, removeUserFromTask } from '../controllers/task';
 import { protect } from '../controllers/auth';
 
 // Mock the controller functions
 jest.mock('../controllers/task', () => ({
   getAllProjectTasks: jest.fn((req, res) => {
     res.status(200).json({ message: 'All project tasks' });
+  }),
+  addUserToTask: jest.fn((req, res) => {
+    res.status(200).json({ message: 'User added to task' });
+  }),
+  removeUserFromTask: jest.fn((req, res) => {
+    res.status(200).json({ message: 'User removed from task' });
   }),
 }));
 
@@ -46,6 +52,34 @@ describe('Task Router', () => {
 
       expect(protect).toHaveBeenCalledTimes(1);
       expect(getAllProjectTasks).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('PATCH /tasks/add-user', () => {
+    it('should add user to task', async () => {
+      const response = await request(app)
+        .patch('/tasks/add-user')
+        .set('Authorization', 'Bearer token') // Assuming you have some kind of token-based auth
+        .send({ userId: 'user123', taskId: 'task123' });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({ message: 'User added to task' });
+      expect(protect).toHaveBeenCalledTimes(1);
+      expect(addUserToTask).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('PATCH /tasks/remove-user', () => {
+    it('should remove user from task', async () => {
+      const response = await request(app)
+        .patch('/tasks/remove-user')
+        .set('Authorization', 'Bearer token') // Assuming you have some kind of token-based auth
+        .send({ userId: 'user123', taskId: 'task123' });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({ message: 'User removed from task' });
+      expect(protect).toHaveBeenCalledTimes(1);
+      expect(removeUserFromTask).toHaveBeenCalledTimes(1);
     });
   });
 });
