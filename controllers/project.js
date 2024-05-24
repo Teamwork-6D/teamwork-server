@@ -69,7 +69,7 @@ export async function getAllUserProjects(req, res) {
   try {
     const projects = await Project.find({
       $or: [{ owner: req.user._id }, { members: { $in: [req.user._id] } }],
-    }).populate('owner');
+    }).populate('owner').populate('members');
     res.status(200).json({
       status: 'success',
       length: projects.length,
@@ -87,7 +87,7 @@ export async function getUserProject(req, res) {
   try {
     const { id } = req.params;
 
-    const project = await Project.findById(id);
+    const project = await Project.findById(id).populate('members');
 
     res.status(200).json({
       status: 'success',

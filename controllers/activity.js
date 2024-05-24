@@ -26,8 +26,8 @@ export async function deleteActivity(activityData) {
 
 export async function getAllProjectActivities(req, res) {
   try {
-    const { projectId } = req.body;
-    const activities = await Activity.find({ projectId });
+    const { projectid } = req.headers;
+    const activities = await Activity.find({ projectId: projectid });
 
     res.status(200).json({
       status: 'success',
