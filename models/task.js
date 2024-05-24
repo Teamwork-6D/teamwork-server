@@ -6,7 +6,10 @@ const taskSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Task must have a title'],
     },
-    body: {
+    about: {
+      type: String,
+    },
+    dueDate: {
       type: String,
     },
     projectId: {
@@ -18,6 +21,10 @@ const taskSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'Column',
       required: [true, 'A task must belong to a column'],
+    },
+    users: {
+      type: [mongoose.Schema.ObjectId],
+      ref: 'User',
     },
   },
   { timestamps: true },

@@ -17,8 +17,19 @@ const columnSchema = new mongoose.Schema(
       required: [true, 'Task column must belong to a project'],
     },
   },
-  { timestamps: true },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+    timestamps: true,
+  },
 );
+
+columnSchema.virtual('tasks', {
+  ref: 'Task',
+  foreignField: 'columnId',
+  localField: '_id',
+});
+
 
 const Column = mongoose.model('Column', columnSchema);
 export default Column;
