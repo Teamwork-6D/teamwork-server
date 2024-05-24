@@ -1,5 +1,4 @@
-// controllers/column,project, auth ,task
-// routes/task
+
 import Activity from '../models/activity.js';
 
 export async function createActivity(activityData) {
@@ -29,7 +28,7 @@ export async function deleteActivity(activityData) {
 export async function getAllProjectActivities(req, res) {
   try {
     const { projectid } = req.headers;
-    const activities = await Activity.find({ projectId: projectid });
+    const activities = await Activity.find({ projectId: projectid }).sort('-createdAt');
 
     res.status(200).json({
       status: 'success',
