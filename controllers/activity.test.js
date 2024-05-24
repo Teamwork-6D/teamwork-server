@@ -1,38 +1,29 @@
 // activity.test.js
 
-import mongoose from 'mongoose';
-import * as activityService from './activity'; // Adjust the import path if necessary
-import Activity from '../models/activity';
+import Activity from '../models/activity.js';
+import { createActivity, updateActivity, deleteActivity, getAllProjectActivities } from './activity.js';
 
-jest.mock('../models/activity');
+jest.mock('../models/activity.js');
 
 describe('Activity Service Test', () => {
-  beforeAll(async () => {
-    mongoose.connect = jest.fn();
-  });
-
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  afterAll(async () => {
-    await mongoose.disconnect();
-  });
-
   it('should create an activity successfully', async () => {
     const activityData = {
-      projectId: new mongoose.Types.ObjectId(),
-      message: 'Test activity message',
-      task: new mongoose.Types.ObjectId(),
-      fromColumn: new mongoose.Types.ObjectId(),
-      toColumn: new mongoose.Types.ObjectId(),
-      user: new mongoose.Types.ObjectId(),
+      projectId: 'project123',
+      message: 'Test message',
+      task: 'task123',
+      fromColumn: 'column123',
+      toColumn: 'column456',
+      user: 'user123',
     };
 
-    const createdActivity = { ...activityData, _id: new mongoose.Types.ObjectId() };
+    const createdActivity = { ...activityData, _id: 'activity123' };
     Activity.create.mockResolvedValue(createdActivity);
 
-    const result = await activityService.createActivity(activityData);
+    const result = await createActivity(activityData);
 
     expect(Activity.create).toHaveBeenCalledWith(activityData);
     expect(result).toEqual(createdActivity);
@@ -40,17 +31,18 @@ describe('Activity Service Test', () => {
 
   it('should update an activity successfully', async () => {
     const activityData = {
-      _id: new mongoose.Types.ObjectId(),
-      projectId: new mongoose.Types.ObjectId(),
-      message: 'Updated activity message',
-      task: new mongoose.Types.ObjectId(),
-      fromColumn: new mongoose.Types.ObjectId(),
-      toColumn: new mongoose.Types.ObjectId(),
+      _id: 'activity123',
+      projectId: 'project123',
+      message: 'Updated message',
+      task: 'task123',
+      fromColumn: 'column123',
+      toColumn: 'column456',
     };
 
-    Activity.findByIdAndUpdate.mockResolvedValue(activityData);
+    const updatedActivity = { ...activityData };
+    Activity.findByIdAndUpdate.mockResolvedValue(updatedActivity);
 
-    const result = await activityService.updateActivity(activityData);
+    const result = await updateActivity(activityData);
 
     expect(Activity.findByIdAndUpdate).toHaveBeenCalledWith(activityData._id, {
       projectId: activityData.projectId,
@@ -59,18 +51,18 @@ describe('Activity Service Test', () => {
       fromColumn: activityData.fromColumn,
       toColumn: activityData.toColumn,
     });
-    expect(result).toEqual(activityData);
+    expect(result).toEqual(updatedActivity);
   });
 
   it('should delete an activity successfully', async () => {
     const activityData = {
-      _id: new mongoose.Types.ObjectId(),
+      _id: 'activity123',
     };
 
     const deletedActivity = { _id: activityData._id };
     Activity.findByIdAndDelete.mockResolvedValue(deletedActivity);
 
-    const result = await activityService.deleteActivity(activityData);
+    const result = await deleteActivity(activityData);
 
     expect(Activity.findByIdAndDelete).toHaveBeenCalledWith(activityData._id);
     expect(result).toEqual(deletedActivity);
@@ -78,7 +70,7 @@ describe('Activity Service Test', () => {
 
   it('should get all project activities successfully', async () => {
     const req = {
-      body: { projectId: new mongoose.Types.ObjectId() },
+      headers: { projectid: 'project123' },
     };
     const res = {
       status: jest.fn().mockReturnThis(),
@@ -86,14 +78,14 @@ describe('Activity Service Test', () => {
     };
 
     const activities = [
-      { projectId: req.body.projectId, message: 'Activity 1' },
-      { projectId: req.body.projectId, message: 'Activity 2' },
+      { projectId: 'project123', message: 'Activity 1' },
+      { projectId: 'project123', message: 'Activity 2' },
     ];
     Activity.find.mockResolvedValue(activities);
 
-    await activityService.getAllProjectActivities(req, res);
+    await getAllProjectActivities(req, res);
 
-    expect(Activity.find).toHaveBeenCalledWith({ projectId: req.body.projectId });
+    expect(Activity.find).toHaveBeenCalledWith({ projectId: req.headers.projectid });
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
       status: 'success',
@@ -103,7 +95,7 @@ describe('Activity Service Test', () => {
 
   it('should handle errors in getAllProjectActivities', async () => {
     const req = {
-      body: { projectId: new mongoose.Types.ObjectId() },
+      headers: { projectid: 'project123' },
     };
     const res = {
       status: jest.fn().mockReturnThis(),
@@ -112,9 +104,9 @@ describe('Activity Service Test', () => {
 
     Activity.find.mockRejectedValue(new Error('Unable to fetch activities'));
 
-    await activityService.getAllProjectActivities(req, res);
+    await getAllProjectActivities(req, res);
 
-    expect(Activity.find).toHaveBeenCalledWith({ projectId: req.body.projectId });
+    expect(Activity.find).toHaveBeenCalledWith({ projectId: req.headers.projectid });
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
       status: 'failure',
